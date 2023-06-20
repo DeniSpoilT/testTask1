@@ -1,18 +1,19 @@
 package ru.komarov;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class CustomEnum {
+    public static final String NO_ENUM_FOR_NAME = "No enum constant for name: ";
+    public static final String NO_ENUM_FOR_ORDINAL = "No enum constant with ordinal: ";
     private final String name;
     private final int ordinal;
     private static int ordinalCount = 0;
-    private static final Map<Integer, CustomEnum> values = new HashMap();
+    private static final List<CustomEnum> values = new ArrayList<>();
 
     public CustomEnum(String name) {
         this.name = name;
         ordinal = ordinalCount++;
-        values.put(ordinal, this);
+        values.add(this);
     }
 
     public String name() {
@@ -23,27 +24,24 @@ public final class CustomEnum {
         return this.ordinal;
     }
 
-    public static String[] values() {
-        return values.values().stream()
-                .map(currentEnum -> currentEnum.name())
-                .toArray(String[]::new);
-
+    public static CustomEnum[] values() {
+        return values.toArray(CustomEnum[]::new);
     }
 
     public static CustomEnum valueOf(String name) {
-        for (CustomEnum customEnum: values.values()){
-            if(customEnum.name().equals(name)){
+        for (CustomEnum customEnum : values) {
+            if (customEnum.name().equals(name)) {
                 return customEnum;
             }
         }
-        throw new RuntimeException("No enum constant " + name);
+        throw new RuntimeException(NO_ENUM_FOR_NAME + name);
     }
 
-    public static CustomEnum valueOf(int ordinal){
+    public static CustomEnum valueOf(int ordinal) {
         try {
-           return values.get(ordinal);
+            return values.get(ordinal);
         } catch (Exception e) {
-            throw new RuntimeException("No enum constant with " + ordinal);
+            throw new RuntimeException(NO_ENUM_FOR_ORDINAL + ordinal);
         }
     }
 
